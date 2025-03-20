@@ -15,11 +15,13 @@ contract Raffle is VRFConsumerBaseV2Plus {
     error Raffle_NotEnoughETH();
     error Raffle__TransferFailed();
     error Raffle__RaffleNotOpen();
-
-    enum RaffleState {
+    
+    enum RaffleState{
         OPEN,
         CALCULATING
     }
+
+
 
     uint256 private immutable i_entranceFee;
     uint256 private immutable i_interval; // duration of the lottery in seconds
@@ -33,8 +35,10 @@ contract Raffle is VRFConsumerBaseV2Plus {
     address private s_recentWinner;
     RaffleState private s_RaffleState;
 
+
     event RaffleEtnered(address indexed player);
     event WinnerPicked(address indexed winner);
+    
 
     constructor(
         uint256 entranceFee,
@@ -57,7 +61,7 @@ contract Raffle is VRFConsumerBaseV2Plus {
         if (msg.value < i_entranceFee) {
             revert Raffle_NotEnoughETH();
         }
-        if (s_RaffleState != RaffleState.OPEN) {
+        if(s_RaffleState != RaffleState.OPEN){
             revert Raffle__RaffleNotOpen();
         }
         s_players.push(payable(msg.sender));
@@ -92,15 +96,21 @@ contract Raffle is VRFConsumerBaseV2Plus {
 
         s_RaffleState = RaffleState.OPEN;
 
+
         s_players = new address payable[](0);
         s_lastTimeStamp = block.timestamp;
-        (bool, success,) = recentWinner.call{value: address(this).balance}("");
-        if (!success) {
+        (bool success,) = recentWinner.call{value: address(this).balance}("");
+        if (!success){
             revert Raffle__TransferFailed();
         }
         emit WinnerPicked(s_recentWinner);
-    }
 
+    }
+    
+    
+    
+    
+    
     // Getter funciotns
 
     function getEntranceFee() external view returns (uint256) {
