@@ -6,7 +6,7 @@ import {DeployRaffle} from "script/Deploy.s.sol";
 import {Raffle} from "src/Raffle.sol";
 import {HelperConfig} from "script/HelperConfig.s.sol";
 
-contract RaffleTest is Test{
+contract RaffleTest is Test {
     Raffle public raffle;
     HelperConfig public helperConfig;
     uint256 entranceFee;
@@ -18,14 +18,14 @@ contract RaffleTest is Test{
 
     address public PLAYER = makeAddr("player");
     uint256 public constant STARTING_PLAYER_BALANCE = 10 ether;
+
     event RaffleEntered(address indexed player);
     event WinnerPicked(address indexed winner);
 
-
-    function setUp() external{
+    function setUp() external {
         DeployRaffle deployer = new DeployRaffle();
         (raffle, helperConfig) = deployer.deployContract();
-        HelperConfig.NetworkConfig memory config  = helperConfig.getConfig();
+        HelperConfig.NetworkConfig memory config = helperConfig.getConfig();
         entranceFee = config.entranceFee;
         interval = config.interval;
         vrfCoordinator = config.vrfCoordinator;
@@ -39,17 +39,20 @@ contract RaffleTest is Test{
     function testRaffleInitialzesOpenState() public view {
         assert(raffle.getRaffleState() == Raffle.RaffleState.OPEN);
     }
+
     function testRaffleRevertsWhenYouDontPayEnough() public {
         vm.prank(PLAYER);
         vm.expectRevert(Raffle.Raffle_NotEnoughETH.selector);
         raffle.enterRaffle();
     }
+
     function testRaffleRecordsPlayersWhenTheyEnter() public {
         vm.prank(PLAYER);
         raffle.enterRaffle{value: entranceFee}();
         address playerRecorded = raffle.getPlayer(0);
         assert(playerRecorded == PLAYER);
     }
+
     function testEtneringRaffleEvent() public {
         vm.prank(PLAYER);
 
@@ -57,5 +60,4 @@ contract RaffleTest is Test{
         emit RaffleEntered(PLAYER);
         raffle.enterRaffle{value: entranceFee}();
     }
-
 }
