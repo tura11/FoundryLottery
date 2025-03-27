@@ -60,6 +60,7 @@ contract RaffleTest is Test {
         emit RaffleEntered(PLAYER);
         raffle.enterRaffle{value: entranceFee}();
     }
+
     function testDontAllowPlayersToEnterWhileRaffleIsCalculating() public {
         vm.prank(PLAYER);
 
@@ -70,6 +71,5 @@ contract RaffleTest is Test {
         raffle.performUpKeep("");
 
         vm.expectRevert(Raffle.Raffle_NotEnoughETH.selector);
-
     }
 }
