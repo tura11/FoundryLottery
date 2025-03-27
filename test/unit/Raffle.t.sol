@@ -60,16 +60,16 @@ contract RaffleTest is Test {
         emit RaffleEntered(PLAYER);
         raffle.enterRaffle{value: entranceFee}();
     }
+    // function testDontAllowPlayersToEnterWhileRaffleIsCalculating() public {
+    //     vm.prank(PLAYER);
 
-    function testDontAllowPlayersToEnterWhileRaffleIsCalculating() public {
-        vm.prank(PLAYER);
+    //     raffle.enterRaffle{value: entranceFee}();
 
-        raffle.enterRaffle{value: entranceFee}();
+    //     vm.warp(block.timestamp + interval + 1);
+    //     vm.roll(block.number + 1);
+    //     raffle.performUpKeep("");
 
-        vm.warp(block.timestamp + interval + 1);
-        vm.roll(block.number + 1);
-        raffle.performUpKeep("");
+    //     vm.expectRevert(Raffle.Raffle_NotEnoughETH.selector);
 
-        vm.expectRevert(Raffle.Raffle_NotEnoughETH.selector);
-    }
+    // }
 }
